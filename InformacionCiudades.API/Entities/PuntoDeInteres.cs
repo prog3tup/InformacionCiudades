@@ -16,7 +16,9 @@ namespace InformacionCiudades.API.Entities
         [MaxLength(250)]
         public string? Descripcion { get; set; } //Agregarlo en la segunda migración para ver como funciona la actualización.
 
+        [ForeignKey("CiudadId")]
         public Ciudad? Ciudad { get; set; }
+        public int CiudadId { get; set; }
         public PuntoDeInteres(string nombre)
         {
             Nombre = nombre;
