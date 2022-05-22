@@ -10,7 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<InformacionCiudadesContext>(dbContextOptions => dbContextOptions.UseSqlite("Data Source=InformacionCiudades.db"));
+builder.Services.AddDbContext<InformacionCiudadesContext>(dbContextOptions => dbContextOptions.UseSqlite(
+    builder.Configuration["ConnectionStrings:InfoCiudadesDBConnectionString"]));
 
 var app = builder.Build();
 
