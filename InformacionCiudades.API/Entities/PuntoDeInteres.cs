@@ -12,7 +12,9 @@ namespace InformacionCiudades.API.Entities
         [Required]
         [MaxLength(50)]
         public string Nombre { get; set; }
-        //public string? Descripcion { get; set; } Lo dejamos para después.
+        
+        [MaxLength(250)]
+        public string? Descripcion { get; set; } //Agregarlo en la segunda migración para ver como funciona la actualización.
 
         public Ciudad? Ciudad { get; set; }
         public PuntoDeInteres(string nombre)
