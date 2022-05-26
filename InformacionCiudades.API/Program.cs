@@ -1,3 +1,4 @@
+using InformacionCiudades.API;
 using InformacionCiudades.API.DBContexts;
 using InformacionCiudades.API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<CiudadesData>();
 
 builder.Services.AddDbContext<InformacionCiudadesContext>(dbContextOptions => dbContextOptions.UseSqlite(
     builder.Configuration["ConnectionStrings:InfoCiudadesDBConnectionString"]));

@@ -8,10 +8,16 @@ namespace CityInfo.API.Controllers
     [Route("api/ciudades/{idCiudad}/puntosdeinteres")] //Ya que esto es dependiente de ciudades necesito que primero me indique la ciudad
     public class PuntosDeInteresController : ControllerBase
     {
+        private readonly CiudadesData _ciudadesData;
+
+        public PuntosDeInteresController(CiudadesData ciudadesData)
+        {
+            _ciudadesData = ciudadesData;
+        }
         [HttpGet]
         public ActionResult<IEnumerable<PuntoDeInteresDto>> GetPuntosDeInteres(int idCiudad)
         {
-            var ciudad = CiudadesData.InstanciaActual.Ciudades.FirstOrDefault(x => x.Id == idCiudad);
+            var ciudad = _ciudadesData.Ciudades.FirstOrDefault(x => x.Id == idCiudad);
             if (ciudad == null)
                 return NotFound();
 
@@ -21,7 +27,7 @@ namespace CityInfo.API.Controllers
         [HttpGet("{idPuntoDeInteres}", Name = "GetPuntoDeInteres")] // El name se lo da para usarlo en el POST.
         public ActionResult<PuntoDeInteresDto> GetPuntosDeInteres(int idCiudad, int idPuntoDeInteres)
         {
-            var city = CiudadesData.InstanciaActual.Ciudades.FirstOrDefault(x => x.Id == idCiudad);
+            var city = _ciudadesData.Ciudades.FirstOrDefault(x => x.Id == idCiudad);
 
             if (city == null)
                 return NotFound();
@@ -37,13 +43,13 @@ namespace CityInfo.API.Controllers
         [HttpPost]
         public ActionResult<PuntoDeInteresDto> CrearPuntoDeInteres(int idCiudad, PuntoDeInteresParaCreacionDto puntoDeInteres)
         {
-            var ciudad = CiudadesData.InstanciaActual.Ciudades.FirstOrDefault(c => c.Id == idCiudad);
+            var ciudad = _ciudadesData.Ciudades.FirstOrDefault(c => c.Id == idCiudad);
             if (ciudad is null)
             {
                 return NotFound();
             }
 
-            var idMaximoPuntosDeInteres = CiudadesData.InstanciaActual.Ciudades.SelectMany(c => c.PuntosDeInteres).Max(p => p.Id);
+            var idMaximoPuntosDeInteres = _ciudadesData.Ciudades.SelectMany(c => c.PuntosDeInteres).Max(p => p.Id);
 
             var nuevoPuntoDeInteres = new PuntoDeInteresDto
             {
@@ -67,7 +73,7 @@ namespace CityInfo.API.Controllers
         [HttpPut("{idPuntoDeInteres}")]
         public ActionResult ActualizarPuntoDeInteres(int idCiudad, int idPuntoDeInteres, PuntoDeInteresParaUpdateDto pointOfInterest)
         {
-            var ciudad = CiudadesData.InstanciaActual.Ciudades.FirstOrDefault(c => c.Id == idCiudad);
+            var ciudad = _ciudadesData.Ciudades.FirstOrDefault(c => c.Id == idCiudad);
 
             if (ciudad == null)
                 return NotFound();
@@ -86,7 +92,7 @@ namespace CityInfo.API.Controllers
         [HttpDelete("{idPuntoDeInteres}")]
         public ActionResult DeletePointOfInterest(int idCiudad, int idPuntoDeInteres)
         {
-            var ciudad = CiudadesData.InstanciaActual.Ciudades.FirstOrDefault(c => c.Id == idCiudad);
+            var ciudad = _ciudadesData.Ciudades.FirstOrDefault(c => c.Id == idCiudad);
             if (ciudad is null)
                 return NotFound();
 
