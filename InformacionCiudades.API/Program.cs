@@ -1,4 +1,5 @@
 using InformacionCiudades.API.DBContexts;
+using InformacionCiudades.API.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<InformacionCiudadesContext>(dbContextOptions => dbContextOptions.UseSqlite(
     builder.Configuration["ConnectionStrings:InfoCiudadesDBConnectionString"]));
+
+builder.Services.AddScoped<IInfoCiudadesRepository, InfoCiudadesRepository>();
 
 var app = builder.Build();
 
