@@ -1,4 +1,4 @@
-﻿using CityInfo.API.Models;
+﻿using InformacionCiudades.API.Models;
 
 namespace InformacionCiudades.API
 {

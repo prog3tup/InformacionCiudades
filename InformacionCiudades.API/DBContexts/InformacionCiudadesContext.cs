@@ -15,6 +15,8 @@ namespace InformacionCiudades.API.DBContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<Ciudad>().HasMany(c => c.PuntosDeInteres).WithOne(p => p.Ciudad).HasForeignKey(c => c.CiudadId);
+
             var ciudades = new Ciudad[3]
             {
                 new Ciudad("New York City")

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CityInfo.API.Controllers
+namespace InformacionCiudades.API.Models
 {
     public class PuntoDeInteresParaCreacionDto//Puede ser q tengamos entidades que se creen con un Id específico,
                                               //igualmente en ese caso recomienda usar un Dto aparte para poder hacer

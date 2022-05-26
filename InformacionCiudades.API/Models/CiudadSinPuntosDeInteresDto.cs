@@ -1,6 +1,6 @@
 ﻿namespace InformacionCiudades.API.Models
 {
-    public class PuntoDeInteresDto
+    public class CiudadSinPuntosDeInteresDto
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;

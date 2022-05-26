@@ -2,6 +2,7 @@ using InformacionCiudades.API;
 using InformacionCiudades.API.DBContexts;
 using InformacionCiudades.API.Services;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ builder.Services.AddDbContext<InformacionCiudadesContext>(dbContextOptions => db
     builder.Configuration["ConnectionStrings:InfoCiudadesDBConnectionString"]));
 
 builder.Services.AddScoped<IInfoCiudadesRepository, InfoCiudadesRepository>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
