@@ -43,7 +43,8 @@ namespace CityInfo.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetCiudad(int id, bool incluirPuntosDeInteres = false)
+        public IActionResult GetCiudad(int id, bool incluirPuntosDeInteres = false) //Ahora devolvemos un IActionResult para que sea más genérico, ya que ahora podemos devolver CiudadDto o CiudadSinPuntosDeInteresDto
+                                                                                    //incluirPuntosDeInteres se envía como parámetro en la url al final de la misma de la siguiente manera /api/ciudades/1?incluirPuntosDeInteres=true
         {
             var ciudad = _infoCiudadesRepository.GetCiudad(id, incluirPuntosDeInteres);
             if (ciudad == null)

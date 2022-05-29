@@ -35,5 +35,27 @@ namespace InformacionCiudades.API.Services
         {
             return _context.PuntosDeInteres.Where(p => p.CiudadId == idCiudad).ToList();
         }
+
+        public bool ExisteCiudad(int idCiudad)
+        {
+            return _context.Ciudades.Any(c => c.Id == idCiudad);
+        }
+
+        public void AgregarPuntoDeInteresACiudad(int idCiudad, PuntoDeInteres puntoDeInteres)
+        {
+            var ciudad = GetCiudad(idCiudad, false);
+            if (ciudad != null)
+                ciudad.PuntosDeInteres.Add(puntoDeInteres);
+        }
+
+        public bool GuardarCambios()
+        {
+            return (_context.SaveChanges() >= 0);
+        }
+
+        public void EliminarPuntoDeInteres(PuntoDeInteres puntoDeInteres)
+        {
+            _context.PuntosDeInteres.Remove(puntoDeInteres);
+        }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using InformacionCiudades.API.Models;
 using InformacionCiudades.API;
 using Microsoft.AspNetCore.Mvc;
+using InformacionCiudades.API.Services;
+using AutoMapper;
+using Entities = InformacionCiudades.API.Entities;
 
 namespace CityInfo.API.Controllers
 {
@@ -8,82 +11,77 @@ namespace CityInfo.API.Controllers
     [Route("api/ciudades/{idCiudad}/puntosdeinteres")] //Ya que esto es dependiente de ciudades necesito que primero me indique la ciudad
     public class PuntosDeInteresController : ControllerBase
     {
-        private readonly CiudadesData _ciudadesData;
+        private readonly IInfoCiudadesRepository _repository;
+        private readonly IMapper _mapper;
 
-        public PuntosDeInteresController(CiudadesData ciudadesData)
+        public PuntosDeInteresController(IInfoCiudadesRepository repository,
+            IMapper mapper)
         {
-            _ciudadesData = ciudadesData;
+            _repository = repository;
+            _mapper = mapper;
         }
+
         [HttpGet]
         public ActionResult<IEnumerable<PuntoDeInteresDto>> GetPuntosDeInteres(int idCiudad)
         {
-            var ciudad = _ciudadesData.Ciudades.FirstOrDefault(x => x.Id == idCiudad);
-            if (ciudad == null)
+            if(!_repository.ExisteCiudad(idCiudad))
                 return NotFound();
 
-            return Ok(ciudad.PuntosDeInteres);
+            return Ok(_mapper.Map<IEnumerable<PuntoDeInteresDto>>(_repository.GetPuntosDeInteresDeCiudad(idCiudad)));
         }
 
         [HttpGet("{idPuntoDeInteres}", Name = "GetPuntoDeInteres")] // El name se lo da para usarlo en el POST.
-        public ActionResult<PuntoDeInteresDto> GetPuntosDeInteres(int idCiudad, int idPuntoDeInteres)
+        public ActionResult<PuntoDeInteresDto> GetPuntoDeInteres(int idCiudad, int idPuntoDeInteres)
         {
-            var city = _ciudadesData.Ciudades.FirstOrDefault(x => x.Id == idCiudad);
-
-            if (city == null)
+            if (!_repository.ExisteCiudad(idCiudad))
                 return NotFound();
 
-            var pointOfInterest = city.PuntosDeInteres.FirstOrDefault(x => x.Id == idPuntoDeInteres);
+            var puntoDeInteres = _repository.GetPuntoDeInteresDeCiudad(idCiudad, idPuntoDeInteres); //Acá lo traemos y no agregamos un método al repositorio pq necesitamos la data, entonces lo tenemos que traer igualmente.
 
-            if (pointOfInterest == null)
+            if (puntoDeInteres == null)
                 return NotFound();
             
-            return Ok(pointOfInterest);
+            return Ok(_mapper.Map<PuntoDeInteresDto>(puntoDeInteres));
         }
 
         [HttpPost]
         public ActionResult<PuntoDeInteresDto> CrearPuntoDeInteres(int idCiudad, PuntoDeInteresParaCreacionDto puntoDeInteres)
         {
-            var ciudad = _ciudadesData.Ciudades.FirstOrDefault(c => c.Id == idCiudad);
-            if (ciudad is null)
+            if (!_repository.ExisteCiudad(idCiudad))
             {
                 return NotFound();
             }
 
-            var idMaximoPuntosDeInteres = _ciudadesData.Ciudades.SelectMany(c => c.PuntosDeInteres).Max(p => p.Id);
+            var nuevoPuntoDeInteres = _mapper.Map<Entities.PuntoDeInteres>(puntoDeInteres);
 
-            var nuevoPuntoDeInteres = new PuntoDeInteresDto
-            {
-                Id = ++idMaximoPuntosDeInteres,
-                Nombre = puntoDeInteres.Nombre,
-                Descripcion = puntoDeInteres.Descripcion
-            };
+            _repository.AgregarPuntoDeInteresACiudad(idCiudad, nuevoPuntoDeInteres);
+            _repository.GuardarCambios();
 
-            ciudad.PuntosDeInteres.Add(nuevoPuntoDeInteres);
+            var puntoDeInteresParaDevolver = _mapper.Map<PuntoDeInteresDto>(nuevoPuntoDeInteres);
 
             return CreatedAtRoute(//CreatedAtRoute es para q devuelva 201, el 200 de post.
                 "GetPuntoDeInteres", //El primer parámetro es el Name del endpoint que hace el Get
                 new //El segundo los parametros q necesita ese endpoint
                 {
                     idCiudad,
-                    idPuntoDeInteres = nuevoPuntoDeInteres.Id
+                    idPuntoDeInteres = puntoDeInteresParaDevolver.Id
                 },
-                nuevoPuntoDeInteres);//El tercero es el objeto creado. 
+                puntoDeInteresParaDevolver);//El tercero es el objeto creado. 
         }
 
         [HttpPut("{idPuntoDeInteres}")]
-        public ActionResult ActualizarPuntoDeInteres(int idCiudad, int idPuntoDeInteres, PuntoDeInteresParaUpdateDto pointOfInterest)
+        public ActionResult ActualizarPuntoDeInteres(int idCiudad, int idPuntoDeInteres, PuntoDeInteresParaUpdateDto puntoDeInteres)
         {
-            var ciudad = _ciudadesData.Ciudades.FirstOrDefault(c => c.Id == idCiudad);
-
-            if (ciudad == null)
+            if(!_repository.ExisteCiudad(idCiudad))
                 return NotFound();
 
-            var puntoDeInteresEnLaBase = ciudad.PuntosDeInteres.FirstOrDefault(p => p.Id == idPuntoDeInteres);
+            var puntoDeInteresEnLaBase = _repository.GetPuntoDeInteresDeCiudad(idCiudad, idPuntoDeInteres);
             if (puntoDeInteresEnLaBase == null)
                 return NotFound();
 
-            puntoDeInteresEnLaBase.Nombre = pointOfInterest.Nombre;
-            puntoDeInteresEnLaBase.Descripcion = pointOfInterest.Descripcion;
+            _mapper.Map(puntoDeInteres, puntoDeInteresEnLaBase); // Ojo que este es distinto.
+
+            _repository.GuardarCambios();
 
             return NoContent();
         }
@@ -92,16 +90,15 @@ namespace CityInfo.API.Controllers
         [HttpDelete("{idPuntoDeInteres}")]
         public ActionResult DeletePointOfInterest(int idCiudad, int idPuntoDeInteres)
         {
-            var ciudad = _ciudadesData.Ciudades.FirstOrDefault(c => c.Id == idCiudad);
-            if (ciudad is null)
+            if(!_repository.ExisteCiudad(idCiudad))
                 return NotFound();
 
-            var puntoDeInteresAEliminar = ciudad.PuntosDeInteres
-                .FirstOrDefault(p => p.Id == idPuntoDeInteres);
+            var puntoDeInteresAEliminar = _repository.GetPuntoDeInteresDeCiudad(idCiudad, idPuntoDeInteres);
             if (puntoDeInteresAEliminar is null)
                 return NotFound();
 
-            ciudad.PuntosDeInteres.Remove(puntoDeInteresAEliminar);
+            _repository.EliminarPuntoDeInteres(puntoDeInteresAEliminar);
+            _repository.GuardarCambios();
 
             return NoContent();
         }

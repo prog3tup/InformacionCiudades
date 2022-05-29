@@ -7,6 +7,8 @@ namespace InformacionCiudades.API.AutoMapperProfiles
         public PuntoDeInteresProfile()
         {
             CreateMap<Entities.PuntoDeInteres, Models.PuntoDeInteresDto>();
+            CreateMap<Models.PuntoDeInteresParaCreacionDto, Entities.PuntoDeInteres>();
+            CreateMap<Models.PuntoDeInteresParaUpdateDto, Entities.PuntoDeInteres>();
         }
     }
 }
