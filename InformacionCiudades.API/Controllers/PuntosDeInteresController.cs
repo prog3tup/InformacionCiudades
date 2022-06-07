@@ -1,13 +1,14 @@
-﻿using InformacionCiudades.API.Models;
-using InformacionCiudades.API;
-using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using InformacionCiudades.API.Models;
 using InformacionCiudades.API.Services;
-using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Entities = InformacionCiudades.API.Entities;
 
 namespace CityInfo.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/ciudades/{idCiudad}/puntosdeinteres")] //Ya que esto es dependiente de ciudades necesito que primero me indique la ciudad
     public class PuntosDeInteresController : ControllerBase
     {
@@ -24,7 +25,7 @@ namespace CityInfo.API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<PuntoDeInteresDto>> GetPuntosDeInteres(int idCiudad)
         {
-            if(!_repository.ExisteCiudad(idCiudad))
+            if (!_repository.ExisteCiudad(idCiudad))
                 return NotFound();
 
             return Ok(_mapper.Map<IEnumerable<PuntoDeInteresDto>>(_repository.GetPuntosDeInteresDeCiudad(idCiudad)));
@@ -40,7 +41,7 @@ namespace CityInfo.API.Controllers
 
             if (puntoDeInteres == null)
                 return NotFound();
-            
+
             return Ok(_mapper.Map<PuntoDeInteresDto>(puntoDeInteres));
         }
 
@@ -72,7 +73,7 @@ namespace CityInfo.API.Controllers
         [HttpPut("{idPuntoDeInteres}")]
         public ActionResult ActualizarPuntoDeInteres(int idCiudad, int idPuntoDeInteres, PuntoDeInteresParaUpdateDto puntoDeInteres)
         {
-            if(!_repository.ExisteCiudad(idCiudad))
+            if (!_repository.ExisteCiudad(idCiudad))
                 return NotFound();
 
             var puntoDeInteresEnLaBase = _repository.GetPuntoDeInteresDeCiudad(idCiudad, idPuntoDeInteres);
@@ -90,7 +91,7 @@ namespace CityInfo.API.Controllers
         [HttpDelete("{idPuntoDeInteres}")]
         public ActionResult DeletePointOfInterest(int idCiudad, int idPuntoDeInteres)
         {
-            if(!_repository.ExisteCiudad(idCiudad))
+            if (!_repository.ExisteCiudad(idCiudad))
                 return NotFound();
 
             var puntoDeInteresAEliminar = _repository.GetPuntoDeInteresDeCiudad(idCiudad, idPuntoDeInteres);

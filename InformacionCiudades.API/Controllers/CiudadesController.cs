@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using InformacionCiudades.API.Models;
-using InformacionCiudades.API;
 using InformacionCiudades.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/ciudades")]
     public class CiudadesController : ControllerBase //controller deriva de ControllerBase
     {
@@ -21,7 +22,7 @@ namespace CityInfo.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet] 
+        [HttpGet]
         public ActionResult<IEnumerable<CiudadSinPuntosDeInteresDto>> GetCiudades() //JsonResults implementa IActionResults
         {
             var ciudades = _infoCiudadesRepository.GetCiudades();
@@ -50,7 +51,7 @@ namespace CityInfo.API.Controllers
             if (ciudad == null)
                 return NotFound();
 
-            if( incluirPuntosDeInteres)
+            if (incluirPuntosDeInteres)
                 return Ok(_mapper.Map<CiudadDto>(ciudad));
 
             return Ok(_mapper.Map<CiudadSinPuntosDeInteresDto>(ciudad));
