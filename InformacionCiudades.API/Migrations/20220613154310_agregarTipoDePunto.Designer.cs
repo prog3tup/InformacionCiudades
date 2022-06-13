@@ -2,6 +2,7 @@
 using InformacionCiudades.API.DBContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InformacionCiudades.API.Migrations
 {
     [DbContext(typeof(InformacionCiudadesContext))]
-    partial class InformacionCiudadesContextModelSnapshot : ModelSnapshot
+    [Migration("20220613154310_agregarTipoDePunto")]
+    partial class agregarTipoDePunto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.5");

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using InformacionCiudades.API.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InformacionCiudades.API.Entities
@@ -12,13 +13,15 @@ namespace InformacionCiudades.API.Entities
         [Required]
         [MaxLength(50)]
         public string Nombre { get; set; }
-        
+
         [MaxLength(250)]
         public string? Descripcion { get; set; } //Agregarlo en la segunda migración para ver como funciona la actualización.
 
         [ForeignKey("CiudadId")]
         public Ciudad? Ciudad { get; set; }
         public int CiudadId { get; set; }
+
+        public TiposPuntosDeInteres TipoPuntoDeInteres { get; set; } = TiposPuntosDeInteres.PuntoTuristico;
         public PuntoDeInteres(string nombre)
         {
             Nombre = nombre;

@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
 using InformacionCiudades.API.Models;
 using InformacionCiudades.API.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Controllers
 {
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [Route("api/ciudades")]
     public class CiudadesController : ControllerBase //controller deriva de ControllerBase
     {

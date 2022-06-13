@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 using InformacionCiudades.API.Models;
 using InformacionCiudades.API.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Entities = InformacionCiudades.API.Entities;
 
 namespace CityInfo.API.Controllers
 {
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [Route("api/ciudades/{idCiudad}/puntosdeinteres")] //Ya que esto es dependiente de ciudades necesito que primero me indique la ciudad
     public class PuntosDeInteresController : ControllerBase
     {
