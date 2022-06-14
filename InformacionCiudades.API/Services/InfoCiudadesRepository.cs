@@ -57,5 +57,10 @@ namespace InformacionCiudades.API.Services
         {
             _context.PuntosDeInteres.Remove(puntoDeInteres);
         }
+
+        public bool NombreCiudadConcuerdaConIdCiudad(string? nombreCiudad, int idCiudad)
+        {
+            return _context.Ciudades.Any(c => c.Id == idCiudad && c.Nombre == nombreCiudad);
+        }
     }
 }

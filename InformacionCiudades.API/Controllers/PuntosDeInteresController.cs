@@ -25,6 +25,11 @@ namespace CityInfo.API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<PuntoDeInteresDto>> GetPuntosDeInteres(int idCiudad)
         {
+            var nombreCiudad = User.Claims.FirstOrDefault(c => c.Type == "city")?.Value;
+
+            if (!_repository.NombreCiudadConcuerdaConIdCiudad(nombreCiudad, idCiudad))
+                return Forbid();
+
             if (!_repository.ExisteCiudad(idCiudad))
                 return NotFound();
 

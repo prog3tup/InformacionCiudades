@@ -12,5 +12,6 @@ namespace InformacionCiudades.API.Services
         public void AgregarPuntoDeInteresACiudad(int idCiudad, PuntoDeInteres puntoDeInteres);
         void EliminarPuntoDeInteres(PuntoDeInteres puntoDeInteres);
         public bool GuardarCambios();
+        bool NombreCiudadConcuerdaConIdCiudad(string? nombreCiudad, int idCiudad);
     }
 }
